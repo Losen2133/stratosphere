@@ -2,10 +2,11 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import { secretEnvironment } from "./environment.secret";
+
 export const environment = {
   production: false,
-  OPENWEATHERMAP_API_KEY: "ba9200f9b18d8fd57cb0153a2b0c6813",
-  OPENROUTER_API_KEY: "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"
+  secretEnvironment
 };
 
 /*
