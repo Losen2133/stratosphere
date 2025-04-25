@@ -32,6 +32,18 @@ export class WeatherService {
     return this.http.get<DailyWeather>(`${this.dailyWeatherUrl}?lat=${location.lat}&lon=${location.lon}&cnt=${count}&units=${units}&appid=${this.apiKey}`);
   }
 
+  private getCurrentWeatherByCityName(city: string, units: string = 'metric'): Observable<CurrentWeather> {
+    return this.http.get<CurrentWeather>(`${this.currentWeatherUrl}?q=${city}&units=${units}&appid=${this.apiKey}`);
+  }
+
+  private getHourlyWeatherByCityName(city: string, count: number = 0, units: string = 'metric'): Observable<HourlyWeather> {
+    return this.http.get<HourlyWeather>(`${this.hourlyWeatherUrl}?q=${city}&cnt=${count}&units=${units}&appid=${this.apiKey}`);
+  }
+
+  private getDailyWeatherByCityName(city: string, count: number = 0, units: string = 'metric'): Observable<DailyWeather> {
+    return this.http.get<DailyWeather>(`${this.dailyWeatherUrl}?q=${city}&cnt=${count}&units=${units}&appid=${this.apiKey}`);
+  }
+
   fetchWeatherParams(location: Location, count: number = 0, units: string = 'metric', hour12: boolean = true): Observable<WeatherDataParam> {
     return forkJoin({
       current: this.getCurrentWeather(location, units),
@@ -47,7 +59,7 @@ export class WeatherService {
             main: current.main,
             wind: current.wind,
             icon: current.weather?.length ? `assets/icon/weather-icons/${current.weather[0].icon}.png` : '',
-            locationName: `Latitude: ${location.lat} | Longitude: ${location.lon}`
+            locationName: `Latitude: ${current.coord.lat} | Longitude: ${current.coord.lon}`
           },
           hourlyParams: [],
           dailyParams: []
@@ -61,7 +73,7 @@ export class WeatherService {
               main: hourly.list[i].main,
               wind: hourly.list[i].wind,
               icon: hourly.list[i].weather?.length ? `assets/icon/weather-icons/${hourly.list[i].weather[0].icon}.png` : '',
-              locationName: `Latitude: ${location.lat} | Longitude: ${location.lon}`
+              locationName: `Latitude: ${hourly.city.coord.lat} | Longitude: ${hourly.city.coord.lon}`
             });
           }
   
@@ -71,7 +83,60 @@ export class WeatherService {
               weather: daily.list[i].weather ?? [],
               temp: daily.list[i].temp,
               icon: daily.list[i].weather?.length ? `assets/icon/weather-icons/${daily.list[i].weather[0].icon}.png` : '',
-              locationName: `Latitude: ${location.lat} | Longitude: ${location.lon}`
+              locationName: `Latitude: ${daily.city.coord.lat} | Longitude: ${daily.city.coord.lon}`
+            });
+          }
+        }
+
+        return weatherParams;
+      }),
+      catchError((error) => {
+        console.error("Error fetching weather params:", error);
+        throw error;
+      })
+    );
+  }
+
+  fetchWeatherParamsByCity(city: string, count: number = 0, units: string = 'metric', hour12: boolean = true): Observable<WeatherDataParam> {
+    return forkJoin({
+      current: this.getCurrentWeatherByCityName(city, units),
+      hourly: this.getHourlyWeatherByCityName(city, count, units),
+      daily: this.getDailyWeatherByCityName(city, count, units)
+    }).pipe(
+      map(({ current, hourly, daily }) => {
+        const weatherParams: WeatherDataParam = {
+          tempFormat: units,
+          currentParams: {
+            dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12),
+            weather: current.weather ?? [],
+            main: current.main,
+            wind: current.wind,
+            icon: current.weather?.length ? `assets/icon/weather-icons/${current.weather[0].icon}.png` : '',
+            locationName: `${current.name}, ${current.sys.country}`
+          },
+          hourlyParams: [],
+          dailyParams: []
+        };
+
+        for (let i = 0; i < count; i++) {
+          if(i !== (count - 1) && hourly.list[i]) {
+            weatherParams.hourlyParams.push({
+              dt: this.dateTimeService.formatTimestampToTimeString(hourly.list[i].dt * 1000, hour12),
+              weather: hourly.list[i].weather ?? [],
+              main: hourly.list[i].main,
+              wind: hourly.list[i].wind,
+              icon: hourly.list[i].weather?.length ? `assets/icon/weather-icons/${hourly.list[i].weather[0].icon}.png` : '',
+              locationName: `${hourly.city.name}, ${hourly.city.country}`
+            });
+          }
+  
+          if (i !== 0 && daily.list[i]) {
+            weatherParams.dailyParams.push({
+              dt: this.dateTimeService.formatTimestampToDateString(daily.list[i].dt * 1000),
+              weather: daily.list[i].weather ?? [],
+              temp: daily.list[i].temp,
+              icon: daily.list[i].weather?.length ? `assets/icon/weather-icons/${daily.list[i].weather[0].icon}.png` : '',
+              locationName: `${daily.city.name}, ${daily.city.country}`
             });
           }
         }

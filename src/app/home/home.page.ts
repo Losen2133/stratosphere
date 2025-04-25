@@ -17,19 +17,35 @@ export class HomePage {
   weatherParam: WeatherDataParam = {} as WeatherDataParam;
 
   constructor(private weatherService: WeatherService) {
-    this.getWeatherParams();
+    
   }
 
-  getWeatherParams() {
-    this.weatherService.fetchWeatherParams(this.location, 6, 'metric', true).subscribe({
-      next: (params) => {
-        this.weatherParam = params;
-        console.log("Weather Params: ", params);
-      },
-      error: (err) => {
-        console.error("Error: ", err);
-      }
-    })
+  async ngOnInit() {
+    await this.getWeatherParams(false);
+  }
+
+  async getWeatherParams(byCity: boolean) {
+    if(!byCity) {
+      this.weatherService.fetchWeatherParams(this.location, 6, 'metric', true).subscribe({
+        next: (params) => {
+          this.weatherParam = params;
+          console.log("Weather Params: ", params);
+        },
+        error: (err) => {
+          console.error("Error: ", err);
+        }
+      })
+    } else {
+      this.weatherService.fetchWeatherParamsByCity('Manila, US', 6, 'metric', true).subscribe({
+        next: (params) => {
+          this.weatherParam = params;
+          console.log("Weather Params by City: ", params);
+        },
+        error: (err) => {
+          console.error("Error: ", err);
+        }
+      })
+    } 
   }
 
 }
