@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { WeatherService } from '../services/weather.service';
-import { Location, WeatherData, WeatherDataParams } from '../models/models.model';
-import { CurrentWeather } from '../models/current-weather.model';
+import { Location, WeatherDataParam } from '../models/models.model';
 
 @Component({
   selector: 'app-home',
@@ -15,68 +14,21 @@ export class HomePage {
     lon: 10.99
   }
 
-  weatherDataParams: WeatherDataParams = {} as WeatherDataParams;
+  weatherParam: WeatherDataParam = {} as WeatherDataParam;
 
   constructor(private weatherService: WeatherService) {
-    this.getCurrentWeather();
-    this.getHourlyWeather(5);
-    this.getDailyWeather();
-    this.getCurrentWeatherByCity();
-    this.getHourlyWeatherByCity();
-    this.getDailyWeatherByCity();
+    this.getWeatherParams();
   }
 
-  getCurrentWeather() {
-    this.weatherService.getCurrentWeather(this.location).subscribe((data) => {
-      this.weatherDataParams.currentParams = {
-        weather: data.weather ?? [],
-        main: data.main,
-        wind: data.wind,
-        icon: data.weather?.length ? `assets/icon/weather-icons/${data.weather[0].icon}.png` : ''
+  getWeatherParams() {
+    this.weatherService.fetchWeatherParams(this.location, 6, 'metric', true).subscribe({
+      next: (params) => {
+        this.weatherParam = params;
+        console.log("Weather Params: ", params);
+      },
+      error: (err) => {
+        console.error("Error: ", err);
       }
-      console.log("Current Weather: ", data);
-      console.log("Params: ", this.weatherDataParams.currentParams);
-    });
-  }
-
-  getHourlyWeather(count: number) {
-    this.weatherService.getHourlyWeather(this.location, count).subscribe((data) => {
-      this.weatherDataParams.hourlyParams = [];
-      for(let counter = 0;counter < count;counter++) {
-        this.weatherDataParams.hourlyParams[counter] = {
-          dt: 'test date',
-          weather: data.list[counter].weather ?? [],
-          wind: data.list[counter].wind,
-          main: data.list[counter].main,
-          icon: data.list[counter].weather?.length ? `assets/icon/weather-icons/${data.list[counter].weather[0].icon}.png` : ''
-        }
-      }
-      console.log("Hourly Weather: ", data);
-      console.log("Params: ", this.weatherDataParams.hourlyParams);
-    });
-  }
-
-  getDailyWeather() {
-    this.weatherService.getDailyWeather(this.location, 5).subscribe((data) => {
-      console.log("Daily Weather: ", data);
-    });
-  }
-
-  getCurrentWeatherByCity() {
-    this.weatherService.getCurrentWeatherByCityName('Cebu').subscribe((data) => {
-      console.log("Current Weather By City: ", data);
-    });
-  }
-
-  getHourlyWeatherByCity() {
-    this.weatherService.getHourlyWeatherByCityName('Cebu', 5).subscribe((data) => {
-      console.log("Hourly Weather By City: ", data);
-    })
-  }
-
-  getDailyWeatherByCity() {
-    this.weatherService.getDailyWeatherByCityName('Cebu', 5).subscribe((data) => {
-      console.log("Daily Weather By City: ", data);
     })
   }
 

@@ -1,16 +1,18 @@
+export interface DailyParams {
+  dt: string;
+  weather: Weather[];
+  temp: Temp;
+  icon: string;
+  locationName: string;
+}
+
+
 export interface DailyWeather {
   city: City;
   cod: string;
   message: number;
   cnt: number;
   list: List[];
-}
-
-export interface DailyParams {
-  dt: string;
-  weather: Weather[];
-  temp: Temp;
-  icon: string;
 }
 
 interface List {

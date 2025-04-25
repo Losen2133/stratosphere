@@ -1,10 +1,11 @@
-import { CurrentWeather, CurrentParams} from "./current-weather.model";
-import { DailyParams, DailyWeather } from "./daily-weather.model";
-import { HourlyParams, HourlyWeather } from "./hourly-weather.model";
+import { CurrentParams } from "./current-weather.model";
+import { DailyParams } from "./daily-weather.model";
+import { HourlyParams } from "./hourly-weather.model";
 
 export interface Setting {
     tempFormat: string;
     darkMode: boolean;
+    hour12: boolean;
 }
 
 export interface Location {
@@ -12,14 +13,7 @@ export interface Location {
     lon: number;
 }
 
-export interface WeatherData {
-    tempFormat: string;
-    currentWeather: CurrentWeather;
-    hourlyWeather: HourlyWeather;
-    dailyWeather: DailyWeather;
-}
-
-export interface WeatherDataParams {
+export interface WeatherDataParam {
     tempFormat: string;
     currentParams: CurrentParams;
     hourlyParams: HourlyParams[];

@@ -1,3 +1,12 @@
+export interface CurrentParams {
+  dt: string;
+  weather: Weather[];
+  main: Main;
+  wind: Wind;
+  icon: string;
+  locationName: string;
+}
+
 export interface CurrentWeather {
   coord: Coord;
   weather: Weather[];
@@ -12,13 +21,6 @@ export interface CurrentWeather {
   id: number;
   name: string;
   cod: number;
-}
-
-export interface CurrentParams {
-  weather: Weather[];
-  main: Main;
-  wind: Wind;
-  icon: string;
 }
 
 interface Sys {

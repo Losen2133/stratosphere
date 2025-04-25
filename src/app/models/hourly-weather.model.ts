@@ -1,17 +1,18 @@
-export interface HourlyWeather {
-  cod: string;
-  message: number;
-  cnt: number;
-  list: List[];
-  city: City;
-}
-
 export interface HourlyParams {
   dt: string;
   weather: Weather[];
   wind: Wind;
   main: Main;
   icon: string;
+  locationName: string;
+}
+
+export interface HourlyWeather {
+  cod: string;
+  message: number;
+  cnt: number;
+  list: List[];
+  city: City;
 }
 
 interface City {
