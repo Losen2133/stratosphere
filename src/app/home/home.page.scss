@@ -1,11 +1,248 @@
-swiper-container {
-  border: 1px solid white;
-  width: 500px;
-  height: 500px;
+// Base colors and font settings
+$primary-color: #4a90e2;
+$secondary-color: #f2f2f2;
+$text-color: #333;
+$card-background: #ffffff;
+$card-border-radius: 8px;
+$container-padding: 16px;
+$font-family: 'Roboto', sans-serif;
+$mobile-font-size: 14px;
+$tablet-font-size: 16px;
+$desktop-font-size: 18px;
+
+// Ion Header Styling
+ion-header {
+  --background: rgba(255, 255, 255, 0.7); // Translucent header
 }
 
-swiper-slide {
+ion-toolbar {
+  background-color: $primary-color;
+  color: #fff;
+}
+
+ion-title {
+  font-size: $desktop-font-size;
+  font-family: $font-family;
+  font-weight: bold;
+}
+
+ion-content {
+  background-color: $secondary-color;
+  padding: 0;
+  font-family: $font-family;
+}
+
+// Fullscreen center wrapper
+.center-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+// Container for all content
+.container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// Current Weather Card
+.current-weather {
+  background: $card-background;
+  border-radius: $card-border-radius;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: $font-family;
+  text-align: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  .current-weather-dt {
+    font-size: 1rem;
+    color: $text-color;
+    margin-bottom: 8px;
+  }
+
+  .current-weather-img {
+    width: 120px;
+    height: 120px;
+    margin: 16px 0;
+    object-fit: cover;
+  }
+
+  .current-weather-desc {
+    font-size: $tablet-font-size;
+    color: $text-color;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .current-weather-main-temp {
+    font-size: 2.4rem;
+    color: $primary-color;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  .current-weather-minmax-temp {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: $text-color;
+
+    .current-weather-min-temp,
+    .current-weather-max-temp {
+      font-weight: 500;
+    }
+  }
+
+  .current-weather-humidity {
+    font-size: 1rem;
+    color: $text-color;
+    margin-top: 12px;
+  }
+}
+
+// Hourly Weather Swiper
+.hourly-swiper {
+  margin-top: 24px;
+  width: 100%;
+
+  swiper-slide {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// Hourly Weather Card
+.hourly-weather {
+  background: $card-background;
+  border-radius: $card-border-radius;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  font-family: $font-family;
+  text-align: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  .hourly-weather-dt {
+    font-size: 1rem;
+    color: $text-color;
+    margin-bottom: 8px;
+  }
+
+  .hourly-weather-icon {
+    width: 60px;
+    height: 60px;
+    margin: 12px 0;
+    object-fit: cover;
+  }
+
+  .hourly-weather-desc {
+    font-size: 1rem;
+    color: $text-color;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .hourly-weather-main-temp {
+    font-size: 1.8rem;
+    color: $primary-color;
+    font-weight: bold;
+    margin: 8px 0;
+  }
+
+  .hourly-weather-minmax-temp {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: $text-color;
+
+    .hourly-weather-min-temp,
+    .hourly-weather-max-temp {
+      font-weight: 500;
+    }
+
+    .hourly-weather-wind {
+      margin-top: 8px;
+
+      .hourly-weather-wind-speed,
+      .hourly-weather-wind-deg {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.9rem;
+      }
+    }
+
+    .hourly-weather-humidity {
+      font-size: 0.9rem;
+      color: $text-color;
+      margin-top: 8px;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .center-wrapper {
+    padding: 12px;
+  }
+
+  .container {
+    padding: 0;
+  }
+
+  .current-weather,
+  .hourly-weather {
+    padding: 12px;
+  }
+
+  .current-weather-main-temp {
+    font-size: 2rem;
+  }
+
+  .hourly-weather-main-temp {
+    font-size: 1.6rem;
+  }
+
+  .hourly-swiper {
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .current-weather-main-temp {
+    font-size: 1.6rem;
+  }
+
+  .hourly-weather-main-temp {
+    font-size: 1.4rem;
+  }
+
+  .current-weather-desc,
+  .hourly-weather-desc {
+    font-size: $mobile-font-size;
+  }
+
+  .current-weather-minmax-temp {
+    font-size: 0.8rem;
+  }
+
+  .current-weather-humidity,
+  .hourly-weather-humidity {
+    font-size: 0.8rem;
+  }
 }
