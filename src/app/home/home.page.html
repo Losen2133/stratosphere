@@ -1,170 +1,198 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      STRATOSPHERE
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <h1>Current Weather</h1>
-        <ion-card>
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <span class="location">{{ weatherParam.currentParams.locationName }}</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="dt">{{ weatherParam.currentParams.dt }}</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <ion-img class="icon" [src]="weatherParam.currentParams.icon"></ion-img>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="desc">{{ weatherParam.currentParams.weather[0].description | titlecase }}</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;C</span>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;F</span>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;K</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;C | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;C</span>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;F | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;F</span>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;K | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;K</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="sub" *ngIf="weatherParam.tempFormat !== 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/s</span>
-                <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/h</span>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <span class="sub">💧 <b>Humidity:</b> {{ weatherParam.currentParams.main.humidity }}%</span>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <h1>Hourly Weather Forecast</h1>
-        <swiper-container pagination="true">
-          <swiper-slide *ngFor="let hourly of weatherParam.hourlyParams">
-            <ion-card>
-              <ion-grid>
-                <ion-row>
-                  <ion-col>
-                    <span class="dt">{{ hourly.dt }}</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-img class="icon" [src]="hourly.icon"></ion-img>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="desc">{{ hourly.weather[0].description | titlecase }}</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;C</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;F</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;K</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;C | <b>Max:</b> {{ hourly.main.temp_max }} &deg;C</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;F | <b>Max:</b> {{ hourly.main.temp_max }} &deg;F</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;K | <b>Max:</b> {{ hourly.main.temp_max }} &deg;K</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat !== 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/s</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/h</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub">💧 <b>Humidity:</b> {{ weatherParam.currentParams.main.humidity }}%</span>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card>
-          </swiper-slide>
-        </swiper-container>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <h1>Daily Weather Forecast</h1>
-        <swiper-container pagination="true">
-          <swiper-slide *ngFor="let daily of weatherParam.dailyParams">
-            <ion-card>
-              <ion-grid>
-                <ion-row>
-                  <ion-col>
-                    <span class="dt">{{ daily.dt }}</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <ion-img class="icon" [src]="daily.icon"></ion-img>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="desc">{{ daily.weather[0].description | titlecase }}</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;C</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;F</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;K</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;C</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;F</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;K</span>
-                  </ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;C</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;F</span>
-                    <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;K</span>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card>
-          </swiper-slide>
-        </swiper-container>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Settings</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-item>
+        <ion-toggle [(ngModel)]="darkMode">Dark Mode</ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-select label="Temperature Format" [(ngModel)]="tempFormat">
+          <ion-select-option value="metric">Celsius</ion-select-option>
+          <ion-select-option value="imperial">Fahrenheit</ion-select-option>
+          <ion-select-option value="standard">Kelvin</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-toggle [(ngModel)]="hour12">12 Hour Format</ion-toggle>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-menu-toggle slot="start">
+        <ion-button fill="clear">
+          <ion-icon name="settings-outline"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+      <ion-title>STRATOSPHERE</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-grid *ngIf="weatherParam">
+      <ion-row>
+        <ion-col>
+          <h1>Current Weather</h1>
+          <ion-card>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <span class="location">{{ weatherParam.currentParams.locationName }}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="dt">{{ weatherParam.currentParams.dt }}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-img class="icon" [src]="weatherParam.currentParams.icon"></ion-img>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="desc">{{ weatherParam.currentParams.weather[0].description | titlecase }}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;C</span>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;F</span>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Temperature:</b> {{ weatherParam.currentParams.main.temp }} &deg;K</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;C | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;C</span>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;F | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;F</span>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Min:</b> {{ weatherParam.currentParams.main.temp_min }} &deg;K | <b>Max:</b> {{ weatherParam.currentParams.main.temp_max }} &deg;K</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="sub" *ngIf="weatherParam.tempFormat !== 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/s</span>
+                  <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/h</span>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <span class="sub">💧 <b>Humidity:</b> {{ weatherParam.currentParams.main.humidity }}%</span>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col>
+          <h1>Hourly Weather Forecast</h1>
+          <swiper-container pagination="true">
+            <swiper-slide *ngFor="let hourly of weatherParam.hourlyParams">
+              <ion-card>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <span class="dt">{{ hourly.dt }}</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-img class="icon" [src]="hourly.icon"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="desc">{{ hourly.weather[0].description | titlecase }}</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;C</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;F</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Temperature:</b> {{ hourly.main.temp }} &deg;K</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;C | <b>Max:</b> {{ hourly.main.temp_max }} &deg;C</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;F | <b>Max:</b> {{ hourly.main.temp_max }} &deg;F</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ <b>Min:</b> {{ hourly.main.temp_min }} &deg;K | <b>Max:</b> {{ hourly.main.temp_max }} &deg;K</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat !== 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/s</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">💨 <b>Wind Speed:</b> {{ weatherParam.currentParams.wind.speed }} m/h</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub">💧 <b>Humidity:</b> {{ weatherParam.currentParams.main.humidity }}%</span>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+            </swiper-slide>
+          </swiper-container>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row>
+        <ion-col>
+          <h1>Daily Weather Forecast</h1>
+          <swiper-container pagination="true">
+            <swiper-slide *ngFor="let daily of weatherParam.dailyParams">
+              <ion-card>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <span class="dt">{{ daily.dt }}</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <ion-img class="icon" [src]="daily.icon"></ion-img>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="desc">{{ daily.weather[0].description | titlecase }}</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;C</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;F</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Day Temperature: {{ daily.temp.day }} &deg;K</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;C</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;F</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Evening Temperature: {{ daily.temp.eve }} &deg;K</span>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row>
+                    <ion-col>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'metric'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;C</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'imperial'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;F</span>
+                      <span class="sub" *ngIf="weatherParam.tempFormat === 'standard'">🌡️ Night Temperature: {{ daily.temp.night }} &deg;K</span>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+            </swiper-slide>
+          </swiper-container>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</div>

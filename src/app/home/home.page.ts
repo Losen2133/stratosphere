@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { WeatherService } from '../services/weather.service';
 import { Location, WeatherDataParam } from '../models/models.model';
 import { firstValueFrom } from 'rxjs';
+import { Network } from '@capacitor/network';
 
 @Component({
   selector: 'app-home',
@@ -14,13 +15,22 @@ export class HomePage {
     lat: 44.34,
     lon: 10.99
   }
-  weatherParam: WeatherDataParam = {} as WeatherDataParam;
+  darkMode!: boolean;
+  tempFormat!: string;
+  hour12!: boolean;
+  weatherParam?: WeatherDataParam;
 
-  constructor(private weatherService: WeatherService) {
+  constructor(
+    private weatherService: WeatherService,
+  ) {
     
   }
 
   async ngOnInit() {
+    Network.addListener('networkStatusChange', status => {
+      console.log(status.connected)
+    })
+
     await this.getWeatherParams(true);
   }
 
@@ -39,6 +49,4 @@ export class HomePage {
       console.error("Error: ", err);
     }
   }
-  
-
 }
