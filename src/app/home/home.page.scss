@@ -1,3 +1,7 @@
+ion-content {
+  --padding-bottom: 70px;
+}
+
 ion-grid {
   // background-color: yellow;
 }
@@ -11,7 +15,7 @@ ion-col {
 }
 
 swiper-container {
-  border: 1px dashed white;
+  // border: 1px dashed white;
   width: 350px;
   min-height: 200px;
 
@@ -38,23 +42,23 @@ span.location {
   font-weight: bold;
 }
 
-span.current-dt {
+span.dt {
   font-size: 20px;
   padding-top: 10px;
 }
 
-ion-img.current-icon {
+ion-img.icon {
   width: 150px;
   height: 150px;
 }
 
-span.current-desc {
+span.desc {
   font-size: 20px;
   padding-bottom: 15px;
   padding-top: 5px;
 }
 
-span.current-sub {
+span.sub {
   font-size: 15px;
   padding-bottom: 10px;
 }
