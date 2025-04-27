@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { WeatherService } from '../services/weather.service';
 import { Location, WeatherDataParam } from '../models/models.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,6 @@ export class HomePage {
     lat: 44.34,
     lon: 10.99
   }
-
   weatherParam: WeatherDataParam = {} as WeatherDataParam;
 
   constructor(private weatherService: WeatherService) {
@@ -21,31 +21,24 @@ export class HomePage {
   }
 
   async ngOnInit() {
-    await this.getWeatherParams(false);
+    await this.getWeatherParams(true);
   }
 
   async getWeatherParams(byCity: boolean) {
-    if(!byCity) {
-      this.weatherService.fetchWeatherParams(this.location, 6, 'metric', true).subscribe({
-        next: (params) => {
-          this.weatherParam = params;
-          console.log("Weather Params: ", params);
-        },
-        error: (err) => {
-          console.error("Error: ", err);
-        }
-      })
-    } else {
-      this.weatherService.fetchWeatherParamsByCity('Manila, US', 6, 'metric', true).subscribe({
-        next: (params) => {
-          this.weatherParam = params;
-          console.log("Weather Params by City: ", params);
-        },
-        error: (err) => {
-          console.error("Error: ", err);
-        }
-      })
-    } 
+    try {
+      let params;
+      if (!byCity) {
+        params = await firstValueFrom(this.weatherService.fetchWeatherParams(this.location, 6, 'metric', true));
+        console.log("Weather Params: ", params);
+      } else {
+        params = await firstValueFrom(this.weatherService.fetchWeatherParamsByCity('Manila, PH', 6, 'metric', true));
+        console.log("Weather Params by City: ", params);
+      }
+      this.weatherParam = params;
+    } catch (err) {
+      console.error("Error: ", err);
+    }
   }
+  
 
 }
