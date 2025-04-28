@@ -55,6 +55,7 @@ export class WeatherService {
           tempFormat: units,
           currentParams: {
             dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12),
+            timestamp: current.dt,
             weather: current.weather ?? [],
             main: current.main,
             wind: current.wind,
@@ -69,6 +70,7 @@ export class WeatherService {
           if(i !== (count - 1) && hourly.list[i]) {
             weatherParams.hourlyParams.push({
               dt: this.dateTimeService.formatTimestampToTimeString(hourly.list[i].dt * 1000, hour12),
+              timestamp: hourly.list[i].dt,
               weather: hourly.list[i].weather ?? [],
               main: hourly.list[i].main,
               wind: hourly.list[i].wind,
@@ -80,6 +82,7 @@ export class WeatherService {
           if (i !== 0 && daily.list[i]) {
             weatherParams.dailyParams.push({
               dt: this.dateTimeService.formatTimestampToDateString(daily.list[i].dt * 1000),
+              timestamp: daily.list[i].dt,
               weather: daily.list[i].weather ?? [],
               temp: daily.list[i].temp,
               icon: daily.list[i].weather?.length ? `assets/icon/weather-icons/${daily.list[i].weather[0].icon}.png` : '',
@@ -107,7 +110,8 @@ export class WeatherService {
         const weatherParams: WeatherDataParam = {
           tempFormat: units,
           currentParams: {
-            dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12),
+            dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, true),
+            timestamp: current.dt,
             weather: current.weather ?? [],
             main: current.main,
             wind: current.wind,
@@ -122,6 +126,7 @@ export class WeatherService {
           if(i !== (count - 1) && hourly.list[i]) {
             weatherParams.hourlyParams.push({
               dt: this.dateTimeService.formatTimestampToTimeString(hourly.list[i].dt * 1000, hour12),
+              timestamp: hourly.list[i].dt,
               weather: hourly.list[i].weather ?? [],
               main: hourly.list[i].main,
               wind: hourly.list[i].wind,
@@ -133,6 +138,7 @@ export class WeatherService {
           if (i !== 0 && daily.list[i]) {
             weatherParams.dailyParams.push({
               dt: this.dateTimeService.formatTimestampToDateString(daily.list[i].dt * 1000),
+              timestamp: daily.list[i].dt,
               weather: daily.list[i].weather ?? [],
               temp: daily.list[i].temp,
               icon: daily.list[i].weather?.length ? `assets/icon/weather-icons/${daily.list[i].weather[0].icon}.png` : '',

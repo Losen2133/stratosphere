@@ -1,5 +1,6 @@
 export interface DailyParams {
   dt: string;
+  timestamp: number;
   weather: Weather[];
   temp: Temp;
   icon: string;

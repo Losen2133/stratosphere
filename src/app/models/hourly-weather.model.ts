@@ -1,5 +1,6 @@
 export interface HourlyParams {
   dt: string;
+  timestamp: number;
   weather: Weather[];
   wind: Wind;
   main: Main;

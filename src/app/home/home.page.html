@@ -10,14 +10,14 @@
         <ion-toggle [(ngModel)]="darkMode">Dark Mode</ion-toggle>
       </ion-item>
       <ion-item>
-        <ion-select label="Temperature Format" [(ngModel)]="tempFormat">
-          <ion-select-option value="metric">Celsius</ion-select-option>
-          <ion-select-option value="imperial">Fahrenheit</ion-select-option>
+        <ion-select label="Measuring Format" [(ngModel)]="tempFormat" (ionChange)="onChangeTemp()">
+          <ion-select-option value="metric">Metric</ion-select-option>
+          <ion-select-option value="imperial">Imperial</ion-select-option>
           <ion-select-option value="standard">Kelvin</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-toggle [(ngModel)]="hour12">12 Hour Format</ion-toggle>
+        <ion-toggle [(ngModel)]="hour12" (ionChange)="onChangeHour12()">12 Hour Format</ion-toggle>
       </ion-item>
     </ion-list>
   </ion-content>

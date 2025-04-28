@@ -7,14 +7,14 @@ export class TemperatureService {
 
   constructor() { }
 
-  convertTemps(from: string, to: string, value: number) {
+  convertTemps(from: string, to: string, value: number): number {
     return this.conversionDispatcher(
       this.instructionConstructor(from, to),
       value
     )
   }
 
-  instructionConstructor(from: string, to: string): string {
+  private instructionConstructor(from: string, to: string): string {
     let instruction: string;
 
     if(from === 'metric' && to === 'imperial') {
@@ -30,13 +30,13 @@ export class TemperatureService {
     } else if(from === 'standard' && to === 'imperial') {
       instruction = 'ktf';
     } else {
-      instruction = 'Invalid conversion instruction';
+      instruction = 'Invalid instruction components';
     }
 
     return instruction;
   }
 
-  conversionDispatcher(instruction: string, value: number): string | number {
+  private conversionDispatcher(instruction: string, value: number): number {
     switch (instruction) {
       case 'ctf': return this.celsiusToFahrenheit(value);
       case 'ctk': return this.celsiusToKelvin(value);
@@ -44,31 +44,31 @@ export class TemperatureService {
       case 'ftk': return this.fahrenheitToKelvin(value);
       case 'ktc': return this.kelvinToCelsius(value);
       case 'ktf': return this.kelvinToFahrenheit(value);
-      default: return 'Invalid instruction';
+      default: return 0;
     }
   }
   
-  celsiusToFahrenheit(c: number) {
-    return ((c * 9/5) + 32).toFixed(2);
+  private celsiusToFahrenheit(c: number) {
+    return parseFloat(((c * 9/5) + 32).toFixed(2));
   }
 
-  celsiusToKelvin(c: number) {
-    return (c + 273.15).toFixed(2);
+  private celsiusToKelvin(c: number) {
+    return parseFloat((c + 273.15).toFixed(2));
   }
 
-  fahrenheitToCelsius(f: number) {
-    return ((f - 32) * 5/9).toFixed(2);
+  private fahrenheitToCelsius(f: number) {
+    return parseFloat(((f - 32) * 5/9).toFixed(2));
   }
 
-  fahrenheitToKelvin(f: number) {
-    return (((f - 32) * 5/9) + 273.15).toFixed(2);
+  private fahrenheitToKelvin(f: number) {
+    return parseFloat((((f - 32) * 5/9) + 273.15).toFixed(2));
   }
 
-  kelvinToCelsius(k: number) {
-    return (k - 273.15).toFixed(2);
+  private kelvinToCelsius(k: number) {
+    return parseFloat((k - 273.15).toFixed(2));
   }
 
-  kelvinToFahrenheit(k: number) {
-    return ((k - 273.15) * 9/5 + 32).toFixed(2);
+  private kelvinToFahrenheit(k: number) {
+    return parseFloat(((k - 273.15) * 9/5 + 32).toFixed(2));
   }
 }

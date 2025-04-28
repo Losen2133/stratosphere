@@ -1,5 +1,6 @@
 export interface CurrentParams {
   dt: string;
+  timestamp: number;
   weather: Weather[];
   main: Main;
   wind: Wind;
