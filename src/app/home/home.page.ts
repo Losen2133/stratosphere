@@ -7,6 +7,7 @@ import { PreferencesService } from '../services/preferences.service';
 import { ToastController } from '@ionic/angular';
 import { DateTimeService } from '../services/date-time.service';
 import { TemperatureService } from '../services/temperature.service';
+import { AiPromptService } from '../services/ai-prompt.service';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomePage {
   hour12!: boolean;
   isConnected!: boolean;
   weatherParam?: WeatherDataParam;
+  weatherAdvice!: string;
   
 
   constructor(
@@ -32,7 +34,8 @@ export class HomePage {
     private preferencesService: PreferencesService,
     private toastController: ToastController,
     private dateTimeService: DateTimeService,
-    private temperatureService: TemperatureService
+    private temperatureService: TemperatureService,
+    private aiPromptService: AiPromptService
   ) {
     
   }
@@ -66,6 +69,24 @@ export class HomePage {
       } else {
         console.log('No weather preference saved')
       }
+    }
+
+    await this.fetchAdvice();
+  }
+
+  async fetchAdvice() {
+    try {
+      const res: any = await firstValueFrom(
+        this.aiPromptService.generateAdvice(
+          'You are a weather reporter',
+          `in ${this.weatherParam?.currentParams.locationName} it's ${this.weatherParam?.currentParams.main.temp} degrees ${this.weatherParam?.tempFormat} (if standard it's kelvin) and ${this.weatherParam?.currentParams.weather[0].description}, what advice can you give? limit it to a sentence.`
+        )
+      )
+
+      this.weatherAdvice = res.candidates?.[0]?.content?.parts?.[0]?.text;
+      console.log(res);
+    } catch(error) {
+      this.weatherAdvice = "No available advices right now :(";
     }
   }
 
