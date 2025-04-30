@@ -8,6 +8,7 @@ import { ToastController } from '@ionic/angular';
 import { DateTimeService } from '../services/date-time.service';
 import { TemperatureService } from '../services/temperature.service';
 import { AiPromptService } from '../services/ai-prompt.service';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +17,7 @@ import { AiPromptService } from '../services/ai-prompt.service';
   standalone: false,
 })
 export class HomePage {
-  private location: Location = {
-    lat: 44.34,
-    lon: 10.99
-  }
+  private location!: Location;
   userSettings!: Setting;
   darkMode!: boolean;
   tempFormat!: string;
@@ -35,7 +33,8 @@ export class HomePage {
     private toastController: ToastController,
     private dateTimeService: DateTimeService,
     private temperatureService: TemperatureService,
-    private aiPromptService: AiPromptService
+    private aiPromptService: AiPromptService,
+    private locationService: LocationService
   ) {
     
   }
@@ -43,6 +42,7 @@ export class HomePage {
   async ngOnInit() {
     // await this.preferencesService.clearPreferences()
     await this.checkNetworkStatus();
+    await this.getCurrentLocation();
 
     Network.addListener('networkStatusChange', async status => {
       if(this.isConnected != status.connected) {
@@ -67,11 +67,19 @@ export class HomePage {
       if(savedWeather) {
         this.weatherParam = savedWeather;
       } else {
-        console.log('No weather preference saved')
+        console.log('No weather preference saved');
       }
     }
 
     await this.fetchAdvice();
+  }
+
+  async getCurrentLocation() {
+    try {
+      this.location = await this.locationService.getCurrentPosition();
+    } catch(error) {
+      console.error('Error getting location: ', error);
+    }
   }
 
   async fetchAdvice() {

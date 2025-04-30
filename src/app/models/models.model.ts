@@ -14,6 +14,7 @@ export interface Location {
 }
 
 export interface WeatherDataParam {
+    flagIconUrl: string;
     tempFormat: string;
     currentParams: CurrentParams;
     hourlyParams: HourlyParams[];

@@ -8,6 +8,7 @@ import { HourlyWeather } from '../models/hourly-weather.model';
 import { DailyWeather } from '../models/daily-weather.model';
 import { environment } from '../../environments/environment';
 import { DateTimeService } from './date-time.service';
+import { FlagService } from './flag.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,11 @@ export class WeatherService {
   private dailyWeatherUrl = "https://pro.openweathermap.org/data/2.5/forecast/daily";
   private apiKey = environment.secretEnvironment.OPENWEATHERMAP_API_KEY;
 
-  constructor(private http: HttpClient, private dateTimeService: DateTimeService) {}
+  constructor(
+    private http: HttpClient,
+    private dateTimeService: DateTimeService,
+    private flagService: FlagService
+  ) {}
 
   private getCurrentWeather(location: Location, units: string = 'metric'): Observable<CurrentWeather> {
     return this.http.get<CurrentWeather>(`${this.currentWeatherUrl}?lat=${location.lat}&lon=${location.lon}&units=${units}&appid=${this.apiKey}`);
@@ -52,6 +57,9 @@ export class WeatherService {
     }).pipe(
       map(({ current, hourly, daily }) => {
         const weatherParams: WeatherDataParam = {
+          flagIconUrl: this.flagService.getFlagUrl(
+            current.sys.country, true, 48
+          ),
           tempFormat: units,
           currentParams: {
             dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12),
@@ -108,6 +116,9 @@ export class WeatherService {
     }).pipe(
       map(({ current, hourly, daily }) => {
         const weatherParams: WeatherDataParam = {
+          flagIconUrl: this.flagService.getFlagUrl(
+            current.sys.country, true, 48
+          ),
           tempFormat: units,
           currentParams: {
             dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, true),
