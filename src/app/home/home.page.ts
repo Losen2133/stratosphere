@@ -25,7 +25,6 @@ export class HomePage {
   isConnected!: boolean;
   weatherParam?: WeatherDataParam;
   weatherAdvice!: string;
-  
 
   constructor(
     private weatherService: WeatherService,
@@ -59,7 +58,7 @@ export class HomePage {
       await this.initUserSettings();
       this.setSettings();
 
-      await this.getWeatherParams(false);
+      await this.getWeatherParams(true);
       await this.preferencesService.createPreference('currentWeather', this.weatherParam);
 
     } else {
@@ -138,10 +137,10 @@ export class HomePage {
     try {
       let params;
       if (!byCity) {
-        params = await firstValueFrom(this.weatherService.fetchWeatherParams(this.location, 6, this.userSettings.tempFormat, this.userSettings.hour12));
+        params = await firstValueFrom(this.weatherService.fetchWeatherParams(this.location, 5, this.userSettings.tempFormat, this.userSettings.hour12));
         console.log("Weather Params: ", params);
       } else {
-        params = await firstValueFrom(this.weatherService.fetchWeatherParamsByCity('Manila, PH', 6, this.userSettings.tempFormat, this.userSettings.hour12));
+        params = await firstValueFrom(this.weatherService.fetchWeatherParamsByCity('New York', 5, this.userSettings.tempFormat, this.userSettings.hour12));
         console.log("Weather Params by City: ", params);
       }
       this.weatherParam = params;
@@ -157,7 +156,8 @@ export class HomePage {
     if (this.weatherParam?.currentParams) {
       this.weatherParam.currentParams.dt = this.dateTimeService.formatTimestampToTimeString(
         this.weatherParam.currentParams.timestamp * 1000,
-        this.userSettings.hour12
+        this.userSettings.hour12,
+        {lon: this.weatherParam.coord.lon, lat: this.weatherParam.coord.lat}
       );
     }
 
@@ -165,7 +165,8 @@ export class HomePage {
       for(let counter = 0;counter < 5;counter++) {
         this.weatherParam.hourlyParams[counter].dt = this.dateTimeService.formatTimestampToTimeString(
           this.weatherParam.hourlyParams[counter].timestamp * 1000,
-          this.userSettings.hour12
+          this.userSettings.hour12,
+          {lon: this.weatherParam.coord.lon, lat: this.weatherParam.coord.lat}
         );
       }
     }

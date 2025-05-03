@@ -60,7 +60,7 @@ interface Weather {
   icon: string;
 }
 
-interface Coord {
+export interface Coord {
   lon: number;
   lat: number;
 }

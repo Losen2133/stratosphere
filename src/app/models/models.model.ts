@@ -1,4 +1,4 @@
-import { CurrentParams } from "./current-weather.model";
+import { Coord, CurrentParams } from "./current-weather.model";
 import { DailyParams } from "./daily-weather.model";
 import { HourlyParams } from "./hourly-weather.model";
 
@@ -16,6 +16,7 @@ export interface Location {
 export interface WeatherDataParam {
     flagIconUrl: string;
     tempFormat: string;
+    coord: Coord;
     currentParams: CurrentParams;
     hourlyParams: HourlyParams[];
     dailyParams: DailyParams[];
