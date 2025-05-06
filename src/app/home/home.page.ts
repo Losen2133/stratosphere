@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { WeatherService } from '../services/weather.service';
 import { Location, Setting, WeatherDataParam } from '../models/models.model';
 import { firstValueFrom } from 'rxjs';
 import { Network } from '@capacitor/network';
 import { PreferencesService } from '../services/preferences.service';
-import { ToastController } from '@ionic/angular';
+import { IonContent, ToastController } from '@ionic/angular';
 import { DateTimeService } from '../services/date-time.service';
 import { TemperatureService } from '../services/temperature.service';
 import { AiPromptService } from '../services/ai-prompt.service';
@@ -25,6 +25,10 @@ export class HomePage {
   isConnected!: boolean;
   weatherParam?: WeatherDataParam;
   weatherAdvice!: string;
+  isLoading: boolean = true;
+  searchValue!: string;
+
+  @ViewChild('content', { static: false }) content!: IonContent;
 
   constructor(
     private weatherService: WeatherService,
@@ -58,7 +62,7 @@ export class HomePage {
       await this.initUserSettings();
       this.setSettings();
 
-      await this.getWeatherParams(true);
+      await this.getWeatherParams(false);
       await this.preferencesService.createPreference('currentWeather', this.weatherParam);
 
     } else {
@@ -71,6 +75,8 @@ export class HomePage {
     }
 
     await this.fetchAdvice();
+
+    this.isLoading = false;
   }
 
   async getCurrentLocation() {
@@ -83,15 +89,16 @@ export class HomePage {
 
   async fetchAdvice() {
     try {
+      this.weatherAdvice = "";
       const res: any = await firstValueFrom(
         this.aiPromptService.generateAdvice(
           'You are a weather reporter',
-          `in ${this.weatherParam?.currentParams.locationName} it's ${this.weatherParam?.currentParams.main.temp} degrees ${this.weatherParam?.tempFormat} (if standard it's kelvin) and ${this.weatherParam?.currentParams.weather[0].description}, what advice can you give? limit it to a sentence.`
+          `in ${this.weatherParam?.currentParams.locationName} it's ${this.weatherParam?.currentParams.main.temp} degrees ${this.weatherParam?.tempFormat} (metric = celsius, imperial = fahrenheit, standard = kelvin) and ${this.weatherParam?.currentParams.weather[0].description}, what advice can you give? limit it to a sentence and don't mention any latitude and longitude.`
         )
       )
 
       this.weatherAdvice = res.candidates?.[0]?.content?.parts?.[0]?.text;
-      console.log(res);
+      console.log("Advice: ", res.candidates?.[0]?.content?.parts?.[0]?.text);
     } catch(error) {
       this.weatherAdvice = "No available advices right now :(";
     }
@@ -140,7 +147,7 @@ export class HomePage {
         params = await firstValueFrom(this.weatherService.fetchWeatherParams(this.location, 5, this.userSettings.tempFormat, this.userSettings.hour12));
         console.log("Weather Params: ", params);
       } else {
-        params = await firstValueFrom(this.weatherService.fetchWeatherParamsByCity('New York', 5, this.userSettings.tempFormat, this.userSettings.hour12));
+        params = await firstValueFrom(this.weatherService.fetchWeatherParamsByCity(this.searchValue, 5, this.userSettings.tempFormat, this.userSettings.hour12));
         console.log("Weather Params by City: ", params);
       }
       this.weatherParam = params;
@@ -246,4 +253,21 @@ export class HomePage {
     }
   }
 
+  async handleSearch(event: Event) {
+    const target = event.target as HTMLIonSearchbarElement;
+    this.searchValue = target.value?.toLowerCase() || '';
+    console.log("Search Value: ", this.searchValue);
+    
+    if(this.searchValue ===  "") {
+      this.isLoading = true;
+      await this.getWeatherParams(false);
+    } else {
+      this.isLoading = true;
+      await this.getWeatherParams(true);
+    }
+    this.content.scrollToTop(500);
+    await this.preferencesService.createPreference('currentWeather', this.weatherParam);
+    await this.fetchAdvice();
+    this.isLoading = false;
+  }
 }

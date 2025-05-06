@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Location, WeatherDataParam } from '../models/models.model';
 import { Observable, forkJoin } from 'rxjs'; 
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { CurrentWeather } from '../models/current-weather.model';
 import { HourlyWeather } from '../models/hourly-weather.model';
 import { DailyWeather } from '../models/daily-weather.model';
@@ -55,12 +55,14 @@ export class WeatherService {
       hourly: this.getHourlyWeather(location, count, units),
       daily: this.getDailyWeather(location, count, units)
     }).pipe(
-      map(({ current, hourly, daily }) => {
+      switchMap( async ({ current, hourly, daily }) => {
+        const flagUrl = await this.flagService.getFlagUrl(
+          current.sys.country, true, 48
+        )
+
         const weatherParams: WeatherDataParam = {
           coord: current.coord,
-          flagIconUrl: this.flagService.getFlagUrl(
-            current.sys.country, true, 48
-          ),
+          flagIconUrl: flagUrl,
           tempFormat: units,
           currentParams: {
             dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12, location),
@@ -111,12 +113,14 @@ export class WeatherService {
       hourly: this.getHourlyWeatherByCityName(city, count, units),
       daily: this.getDailyWeatherByCityName(city, count, units)
     }).pipe(
-      map(({ current, hourly, daily }) => {
+      switchMap( async ({ current, hourly, daily }) => {
+        const flagUrl = await this.flagService.getFlagUrl(
+          current.sys.country, true, 48
+        )
+
         const weatherParams: WeatherDataParam = {
           coord: current.coord,
-          flagIconUrl: this.flagService.getFlagUrl(
-            current.sys.country, true, 48
-          ),
+          flagIconUrl: flagUrl,
           tempFormat: units,
           currentParams: {
             dt: this.dateTimeService.formatTimestampToTimeString(current.dt * 1000, hour12, {lon: current.coord.lon, lat: current.coord.lat}),

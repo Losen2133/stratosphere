@@ -6,9 +6,9 @@
   </ion-header>
   <ion-content class="ion-padding">
     <ion-list>
-      <ion-item>
+      <!-- <ion-item>
         <ion-toggle [(ngModel)]="darkMode">Dark Mode</ion-toggle>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         <ion-select label="Measuring Format" [(ngModel)]="tempFormat" (ionChange)="onChangeTemp()">
           <ion-select-option value="metric">Metric</ion-select-option>
@@ -30,11 +30,21 @@
           <ion-icon name="settings-outline"></ion-icon>
         </ion-button>
       </ion-menu-toggle>
-      <ion-title>STRATOSPHERE</ion-title>
+      <ion-title slot="top">STRATOSPHERE</ion-title>
+      <ion-searchbar [debounce]="1000" (ionInput)="handleSearch($event)"></ion-searchbar>
+      <ion-button id="advice-popover" [disabled]="!weatherAdvice" slot="end">Advice</ion-button>
+          <ion-popover trigger="advice-popover" side="bottom" alignment="start">
+            <ng-template>
+              <div class="popover-content">🕵🏻‍♀️: {{ weatherAdvice }}</div>
+            </ng-template>
+          </ion-popover>
     </ion-toolbar>
   </ion-header>
-  <ion-content class="ion-padding">
-    <ion-grid *ngIf="weatherParam">
+  <div class="spinner-wrapper" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <ion-content class="ion-padding" *ngIf="weatherParam" #content>
+    <ion-grid >
       <ion-row>
         <ion-col>
           <h1>Current Weather</h1>
@@ -90,7 +100,6 @@
           </ion-card>
         </ion-col>
       </ion-row>
-  
       <ion-row>
         <ion-col>
           <h1>Hourly Weather Forecast</h1>

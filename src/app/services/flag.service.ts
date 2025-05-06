@@ -8,11 +8,11 @@ export class FlagService {
 
   constructor() { }
   
-  getFlagUrl(countryCode: string, shiny: boolean, size: number): string {
-    if(shiny) {
-      return `${this.flagUrl}/${countryCode}/shiny/${size}.png`;
-    } else {
-      return `${this.flagUrl}/${countryCode}/flat/${size}.png`;
-    }
+  getFlagUrl(countryCode: string, shiny: boolean, size: number): Promise<string> {
+    const url = shiny
+      ? `${this.flagUrl}/${countryCode}/shiny/${size}.png`
+      : `${this.flagUrl}/${countryCode}/flat/${size}.png`;
+
+    return Promise.resolve(url);
   }
 }
