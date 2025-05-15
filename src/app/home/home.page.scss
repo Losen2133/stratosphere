@@ -20,7 +20,7 @@ swiper-container {
 }
 
 ion-card {
-  min-width: 350px;
+  min-width: 360px;
   padding: 10px;
   height: inherit;
   display: flex;
@@ -66,8 +66,13 @@ span.sub {
 
 .popover-content {
   padding: 10px;
-  text-align: justify;
   font-size: 20px;
+}
+
+ion-toolbar {
+  --padding-end: 10px;
+  --padding-start: 10px;
+  --padding-top: 30px;
 }
 
 

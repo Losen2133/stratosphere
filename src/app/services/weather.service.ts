@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Location, WeatherDataParam } from '../models/models.model';
 import { Observable, forkJoin } from 'rxjs'; 
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { CurrentWeather } from '../models/current-weather.model';
 import { HourlyWeather } from '../models/hourly-weather.model';
 import { DailyWeather } from '../models/daily-weather.model';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { DateTimeService } from './date-time.service';
 import { FlagService } from './flag.service';
+import { ImagePreloaderService } from './image-preloader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class WeatherService {
   constructor(
     private http: HttpClient,
     private dateTimeService: DateTimeService,
-    private flagService: FlagService
+    private flagService: FlagService,
+    private imagePreloaderService: ImagePreloaderService
   ) {}
 
   private getCurrentWeather(location: Location, units: string = 'metric'): Observable<CurrentWeather> {
@@ -71,7 +73,7 @@ export class WeatherService {
             main: current.main,
             wind: current.wind,
             icon: current.weather?.length ? `assets/icon/weather-icons/${current.weather[0].icon}.png` : '',
-            locationName: `Latitude: ${current.coord.lat} | Longitude: ${current.coord.lon}`
+            locationName: `${current.name}, ${current.sys.country}`
           },
           hourlyParams: [],
           dailyParams: []
@@ -85,7 +87,7 @@ export class WeatherService {
             main: hourly.list[i].main,
             wind: hourly.list[i].wind,
             icon: hourly.list[i].weather?.length ? `assets/icon/weather-icons/${hourly.list[i].weather[0].icon}.png` : '',
-            locationName: `Latitude: ${hourly.city.coord.lat} | Longitude: ${hourly.city.coord.lon}`
+            locationName: `${current.name}, ${current.sys.country}`
           });
   
           weatherParams.dailyParams.push({
@@ -94,10 +96,23 @@ export class WeatherService {
             weather: daily.list[i].weather ?? [],
             temp: daily.list[i].temp,
             icon: daily.list[i].weather?.length ? `assets/icon/weather-icons/${daily.list[i].weather[0].icon}.png` : '',
-            locationName: `Latitude: ${daily.city.coord.lat} | Longitude: ${daily.city.coord.lon}`
+            locationName: `${current.name}, ${current.sys.country}`
           });
         }
 
+        this.imagePreloaderService.preloadImages([
+          weatherParams.currentParams.icon,
+          weatherParams.hourlyParams[0].icon,
+          weatherParams.hourlyParams[1].icon,
+          weatherParams.hourlyParams[2].icon,
+          weatherParams.hourlyParams[3].icon,
+          weatherParams.hourlyParams[4].icon,
+          weatherParams.dailyParams[0].icon,
+          weatherParams.dailyParams[1].icon,
+          weatherParams.dailyParams[2].icon,
+          weatherParams.dailyParams[3].icon,
+          weatherParams.dailyParams[4].icon
+        ]);
         return weatherParams;
       }),
       catchError((error) => {
@@ -157,7 +172,19 @@ export class WeatherService {
           
         }
 
-        console.log(hourly);
+        this.imagePreloaderService.preloadImages([
+          weatherParams.currentParams.icon,
+          weatherParams.hourlyParams[0].icon,
+          weatherParams.hourlyParams[1].icon,
+          weatherParams.hourlyParams[2].icon,
+          weatherParams.hourlyParams[3].icon,
+          weatherParams.hourlyParams[4].icon,
+          weatherParams.dailyParams[0].icon,
+          weatherParams.dailyParams[1].icon,
+          weatherParams.dailyParams[2].icon,
+          weatherParams.dailyParams[3].icon,
+          weatherParams.dailyParams[4].icon
+        ]);
         return weatherParams;
       }),
       catchError((error) => {

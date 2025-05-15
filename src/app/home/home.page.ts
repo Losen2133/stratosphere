@@ -75,7 +75,7 @@ export class HomePage {
     }
 
     await this.fetchAdvice();
-
+    
     this.isLoading = false;
   }
 
@@ -93,7 +93,7 @@ export class HomePage {
       const res: any = await firstValueFrom(
         this.aiPromptService.generateAdvice(
           'You are a weather reporter',
-          `in ${this.weatherParam?.currentParams.locationName} it's ${this.weatherParam?.currentParams.main.temp} degrees ${this.weatherParam?.tempFormat} (metric = celsius, imperial = fahrenheit, standard = kelvin) and ${this.weatherParam?.currentParams.weather[0].description}, what advice can you give? limit it to a sentence and don't mention any latitude and longitude.`
+          `in ${this.weatherParam?.currentParams.locationName} it's ${this.weatherParam?.currentParams.main.temp} degrees ${this.weatherParam?.tempFormat} (metric = celsius, imperial = fahrenheit, standard = kelvin) and ${this.weatherParam?.currentParams.weather[0].description}, what advice can you give? limit it to a sentence.`
         )
       )
 
